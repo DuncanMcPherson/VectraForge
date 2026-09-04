@@ -5,6 +5,12 @@
         <File Path="LICENSE" />
         <File Path="CONTRIBUTING.md" />
         <File Path=".gitignore" />
+        <File Path="Directory.Build.props" />
+        <File Path="global.json" />
+    </Folder>
+    <Folder Name="/Solution Items/Release Configuration/" >
+        <File Path=".releaserc.json" />
+        <File Path="package.json" />
     </Folder>
     <Project Path="VectraForge/VectraForge.csproj" />
 </Solution>

@@ -1,0 +1,28 @@
+{
+  "name": "vectra",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "https://gitlab.com/vectra-lang/vectra-forge#readme",
+  "bugs": {
+    "url": "https://gitlab.com/vectra-lang/vectra-forge/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/vectra-lang/vectra-forge.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "semantic-release": "^25.0.9"
+  }
+}
