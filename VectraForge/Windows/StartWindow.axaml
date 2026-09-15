@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="VectraForge.Windows.StartWindow"
+        Title="VectraForge">
+    <Grid RowDefinitions="50,*" ColumnDefinitions="*,Auto">
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Center" FontSize="36">Welcome to VectraForge!</Label>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="8,8,16, 0">
+            <ListBox></ListBox>
+        </ScrollViewer>
+        <StackPanel Grid.Column="1" Grid.Row="1" Spacing="16" Margin="0,8,8,0">
+            <StackPanel.Styles>
+                <Style Selector="Button">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Styles>
+            <Button>Open Project</Button>
+            <Button>Clone Project</Button>
+            <Button>New Project</Button>
+            <Button>Continue without Code</Button>
+        </StackPanel>
+    </Grid>
+</Window>
