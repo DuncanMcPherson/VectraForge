@@ -2,19 +2,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:VectraForge.ViewModel"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VectraForge.Windows.StartWindow"
+        x:DataType="vm:StartWindowViewModel"
         Title="VectraForge">
     <Grid RowDefinitions="50,*" ColumnDefinitions="*,Auto">
         <Label Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Center" FontSize="36">Welcome to VectraForge!</Label>
 
         <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="8,8,16, 0">
-            <ListBox></ListBox>
+            <ItemsControl ItemsSource="{Binding RecentProjects}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding $parent[ItemsControl].DataContext.OpenRecentProjectCommand}"
+                                CommandParameter="{Binding}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="12,8">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" />
+                                <TextBlock Text="{Binding Path, Converter={StaticResource ParentDirectoryConverter}}"
+                                           FontSize="12" Foreground="Gray"/>
+                                <TextBlock Text="{Binding LastOpened, Converter={StaticResource RelativeTimeConverter}}"
+                                           FontSize="11" Foreground="DimGray"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
         <StackPanel Grid.Column="1" Grid.Row="1" Spacing="16" Margin="0,8,8,0">
             <StackPanel.Styles>
                 <Style Selector="Button">
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                 </Style>
             </StackPanel.Styles>
