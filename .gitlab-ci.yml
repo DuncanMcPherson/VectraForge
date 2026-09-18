@@ -191,4 +191,4 @@ release:
     - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
     - apk add --no-cache glab
   script:
-    - glab release create $TAG ./publish/*/*.zip --notes-file release-notes.md
+    - glab release create $TAG ./publish/*/*.zip --notes-file release-notes.md --use-package-registry
