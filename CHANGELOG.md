@@ -1,3 +1,15 @@
+# [0.1.0](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.0.0...v0.1.0) (2026-09-18)
+
+
+### Bug Fixes
+
+* use package registry instead of uploads api ([1f601ad](https://gitlab.com/vectra-lang/vectra-forge/commit/1f601adb330613552b2cc8889543f9c2007464e4))
+
+
+### Features
+
+* Add Start page and basic initial loading capabilities ([b405bfe](https://gitlab.com/vectra-lang/vectra-forge/commit/b405bfe466b49b45a85156ede85ece14577c6b95))
+
 # [0.1.0-dev.2](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.1.0-dev.1...v0.1.0-dev.2) (2026-09-18)
 
 
