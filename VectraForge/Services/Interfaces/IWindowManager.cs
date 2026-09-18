@@ -1,5 +1,8 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using VectraForge.ViewModel;
+using VectraForge.Windows;
+using VectraForge.Windows.Dialogs;
 
 namespace VectraForge.Services.Interfaces;
 
@@ -14,7 +17,7 @@ public interface IWindowManager
     /// and swaps it into the main window position of the application.
     /// </summary>
     void ShowStartWindow();
-    // TODO: This will need to take a ProjectContext as a parameter
+    
     /// <summary>
     /// Displays the main application window for working on a project.
     /// This method is responsible for initializing and showing the primary interface
@@ -29,13 +32,13 @@ public interface IWindowManager
     /// Thrown if the method is called before the required ProjectContext and ProjectWindow
     /// are implemented and integrated.
     /// </exception>
-    void ShowProjectWindow();
+    void ShowProjectWindow(ProjectContext? context);
 
     /// <summary>
     /// Displays a dialog window of the specified type and returns a result asynchronously.
     /// </summary>
     /// <typeparam name="TWindow">
-    /// The type of the dialog window to display, which must inherit from <see cref="Window"/>.
+    /// The type of the dialog window to display, which must inherit from <see cref="Dialog"/>.
     /// </typeparam>
     /// <typeparam name="TResult">
     /// The type of the result expected from the dialog window.
@@ -45,5 +48,24 @@ public interface IWindowManager
     /// The task's result contains the value of type <typeparamref name="TResult"/> returned by the dialog window,
     /// or <c>null</c> if no result is provided.
     /// </returns>
-    Task<TResult?> ShowDialogWindow<TWindow, TResult>() where TWindow : Window;
+    Task<TResult?> ShowDialogWindow<TWindow, TResult>(ViewModelBase owningContext) where TWindow : Dialog;
+
+    /// <summary>
+    /// Registers a window to it's associated view model to handle dialog creation
+    /// </summary>
+    /// <param name="owningContext">
+    /// The view model that will call for dialogs
+    /// </param>
+    /// <param name="owningWindow">
+    /// The <see cref="Window"/> that owns dialogs created from the view model
+    /// </param>
+    void RegisterDialogOwner(ViewModelBase owningContext, Window owningWindow);
+
+    /// <summary>
+    /// Unregisters a window from dialog ownership
+    /// </summary>
+    /// <param name="owner">
+    /// The <see cref="Window"/> that owned dialogs
+    /// </param>
+    void UnregisterDialogOwner(ViewModelBase owner);
 }

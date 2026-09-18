@@ -1,17 +1,20 @@
-using System;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using VectraForge.Services.Interfaces;
+using VectraForge.ViewModel;
 using VectraForge.Windows;
+using VectraForge.Windows.Dialogs;
 
 namespace VectraForge.Services;
 
 /// <inheritdoc/>
-public class WindowManager(IServiceProvider provider) : IWindowManager
+public class WindowManager(IServiceProvider provider, IProjectContextAccessor contextAccessor) : IWindowManager
 {
+    private readonly Dictionary<ViewModelBase, Window> _dialogOwners = new();
+    
     /// <inheritdoc/>
     public void ShowStartWindow()
     {
@@ -20,15 +23,37 @@ public class WindowManager(IServiceProvider provider) : IWindowManager
     }
 
     /// <inheritdoc/>
-    public void ShowProjectWindow()
+    public void ShowProjectWindow(ProjectContext? context)
     {
-        
+        contextAccessor.Current = context;
+        var window = provider.GetRequiredService<MainWindow>();
+        SwapMainWindow(window);
     }
 
     /// <inheritdoc/>
-    public Task<TResult?> ShowDialogWindow<TWindow, TResult>() where TWindow : Window
+    public Task<TResult?> ShowDialogWindow<TWindow, TResult>(ViewModelBase owningContext) where TWindow : Dialog
     {
-        throw new NotImplementedException("Dialogs not supported, yet");
+        Task<TResult?> OpenDialog()
+        {
+            var owner = _dialogOwners.FirstOrDefault(kvp => kvp.Key == owningContext).Value;
+            if (owner is null)
+                throw new InvalidOperationException("No owner window registered for the dialog.");
+            var dialog = provider.GetRequiredService<TWindow>();
+            return dialog.ShowDialog<TResult?>(owner);
+        }
+        return Dispatcher.UIThread.CheckAccess() ? OpenDialog() : Dispatcher.UIThread.Invoke(OpenDialog);
+    }
+
+    /// <inheritdoc/>
+    public void RegisterDialogOwner(ViewModelBase owningContext, Window owningWindow)
+    {
+        _dialogOwners[owningContext] = owningWindow;
+    }
+    
+    /// <inheritdoc/>
+    public void UnregisterDialogOwner(ViewModelBase owningContext)
+    {
+        _dialogOwners.Remove(owningContext);
     }
 
     /// <summary>

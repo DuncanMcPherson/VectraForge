@@ -1,11 +1,9 @@
 using System;
 using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using VectraForge.DependencyInjection;
 using VectraForge.Services.Interfaces;
-using VectraForge.Windows;
 
 namespace VectraForge;
 
