@@ -3,6 +3,7 @@ using VectraForge.Services;
 using VectraForge.Services.Interfaces;
 using VectraForge.ViewModel;
 using VectraForge.Windows;
+using VectraForge.Windows.Dialogs;
 
 namespace VectraForge.DependencyInjection;
 
@@ -43,6 +44,8 @@ public static class VectraForgeServiceProviderExtensions
         private IServiceCollection AddWindows()
         {
             services.AddTransient<StartWindow>();
+            services.AddTransient<MainWindow>();
+            services.AddTransient<ProjectPickerDialog>();
             return services;
         }
 
@@ -71,6 +74,7 @@ public static class VectraForgeServiceProviderExtensions
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IRecentProjectService, RecentProjectService>();
             services.AddSingleton<IConfigService, ConfigService>();
+            services.AddSingleton<IProjectContextAccessor, ProjectContextAccessor>();
             return services;
         }
     }

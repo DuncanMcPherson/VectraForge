@@ -6,14 +6,189 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ci/variables/#cicd-variable-precedence
 stages:
-- test
-- secret-detection
-sast:
+  - test
+  - version
+  - build
+  - release
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+
+# -- Shared config --------------------------------------------------------------
+
+.dotnet-cache:
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+  variables:
+    NUGET_PACKAGES: $CI_PROJECT_DIR/.nuget/packages
+  cache:
+    key:
+      files:
+        - Directory.Packages.props
+    paths:
+      - .nuget/packages
+
+# -- Test -----------------------------------------------------------------------
+
+build-check:
   stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
-variables:
-  SECRET_DETECTION_ENABLED: 'true'
-secret_detection:
-  stage: secret-detection
+  extends: .dotnet-cache
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  script:
+    - dotnet restore
+    - dotnet build --configuration Release --no-restore
+  
+test-check:
+  stage: test
+  extends: .dotnet-cache
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  script:
+    - dotnet restore
+    - dotnet test
+      --results-directory test-results
+      --report-junit
+      --report-junit-filename results.xml
+      --coverage
+      --coverage-output-format cobertura
+      --coverage-output coverage.cobertura.xml
+  coverage: '/Line coverage:\s*(\d+(?:\.\d+)?)%/'
+  artifacts:
+    when: always
+    reports:
+      junit: test-results/results.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: test-results/coverage.cobertura.xml
+
+# -- Version --------------------------------------------------------------------
+
+version:
+  stage: version
+  image: node:24.10
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+  before_script:
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts 2>/dev/null
+    - git config --global user.name "$GITLAB_USER_NAME"
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git remote set-url origin "git@gitlab.com:${CI_PROJECT_PATH}.git"
+  script:
+    - export GIT_SSH_COMMAND="ssh -i $DEV_PUSH_SSH_KEY"
+    - chmod 600 "$DEV_PUSH_SSH_KEY"
+    - npm ci
+    - node ./scripts/run-semantic-release.js
+  artifacts:
+    reports:
+      dotenv: release.env
+    paths:
+      - release-notes.md
+    expire_in: 1 day
+
+# ── Build ─────────────────────────────────────────────────────────────────────
+
+sync:
+  stage: build
+  image: node:24.10
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+  needs:
+    - job: version
+      artifacts: true
+  before_script:
+    - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts 2>/dev/null
+    - git config --global user.name "$GITLAB_USER_NAME"
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git remote set-url origin "git@gitlab.com:${CI_PROJECT_PATH}.git"
+  script:
+    - export GIT_SSH_COMMAND="ssh -i $DEV_PUSH_SSH_KEY"
+    - chmod 600 "$DEV_PUSH_SSH_KEY"
+    - git fetch --unshallow --tags || git fetch --tags
+    - git fetch origin dev
+    - git checkout -B dev origin/dev
+    - git merge origin/master --no-edit
+    - git push origin dev --follow-tags
+
+build:
+  stage: build
+  needs:
+    - job: version
+      artifacts: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+  extends: .dotnet-cache
+  parallel:
+    matrix:
+      - RID: [win-x64, linux-x64, osx-x64]
+  before_script:
+    - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
+    - apt-get update && apt-get install -y --no-install-recommends zip python3
+  script:
+    - |
+      python3 - << 'PY'
+      import os, glob, xml.etree.ElementTree as ET, re
+      version = os.environ['VERSION']
+      numeric_match = re.match(r"^(\d+\.\d+\.\d+)(?:-\w+\.(\d+))?", version)
+      base_version = numeric_match.group(1)
+      rev = numeric_match.group(2) or "0"
+      assembly_version = f"{base_version}.{rev}"
+      paths = [
+          p for p in glob.glob("**/*.csproj", recursive=True)
+          if ("bin" + os.sep not in p and "obj" + os.sep not in p)
+      ]
+      for path in paths:
+          tree = ET.parse(path)
+          root = tree.getroot()
+          ns = ""
+          if root.tag.startswith("{"):
+              ns = root.tag.split("}")[0] + "}"
+          def find_or_create(parent, tag):
+              el = parent.find(f"{ns}{tag}")
+              if el is None:
+                  el = ET.SubElement(parent, f"{ns}{tag}")
+              return el
+          pg = root.find(f"{ns}PropertyGroup")
+          if pg is None:
+              pg = ET.SubElement(root, f"{ns}PropertyGroup")
+          find_or_create(pg, "Version").text = version
+          find_or_create(pg, "AssemblyVersion").text = assembly_version
+          find_or_create(pg, "FileVersion").text = assembly_version
+          find_or_create(pg, "InformationalVersion").text = version
+          tree.write(path, encoding="utf-8", xml_declaration=True)
+          print(f"Stamped {path} with version {version}")
+      PY
+    - dotnet publish VectraForge/VectraForge.csproj --configuration Release --runtime $RID --self-contained true -p:PublishSingleFile=true --output ./publish/$RID
+    - zip -j ./publish/$RID/vectra-forge-$RID.zip ./publish/$RID/*
+  artifacts:
+    paths:
+      - ./publish/$RID/*.zip
+    expire_in: 1 week
+
+# ── Release ───────────────────────────────────────────────────────────────────
+
+release:
+  stage: release
+  needs:
+    - job: version
+      artifacts: true
+    - job: build
+      artifacts: true
+  variables:
+    GLAB_ENABLE_CI_AUTOLOGIN: "true"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+  image: alpine:latest
+  before_script:
+    - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
+    - apk add --no-cache glab
+  script:
+    - glab release create $TAG ./publish/*/*.zip --notes-file release-notes.md --use-package-registry

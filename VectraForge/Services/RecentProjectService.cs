@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using VectraForge.Models;
 using VectraForge.Services.Interfaces;
 
@@ -29,29 +26,17 @@ public class RecentProjectService(IConfigService configService) : IRecentProject
     public void NotifyProjectOpened(RecentProject project)
     {
         project = project with { LastOpened = DateTimeOffset.Now };
-        if (_recentProjects.Count == 0)
-        {
-            _recentProjects.Add(project);
-            RecentProjectsChanged?.Invoke(this, _recentProjects);
-            return;
-        }
-
         var updated = _recentProjects[..];
         var index = updated.IndexOf(project);
-        updated.RemoveAt(index);
-        updated.Insert(index, project);
-        var recentsList = new RecentProjectsList()
-        {
-            Projects = updated
-        };
+        if (index != -1)
+            updated.RemoveAt(index);
+        updated.Insert(0, project);
+
+        var recentsList = new RecentProjectsList { Projects = updated };
         configService.WriteConfigFile("recent_projects.json", recentsList.ToJson());
         
-        if (_recentProjects[0] == project)
-            return;
-        var projectIndex = _recentProjects.IndexOf(project);
-        if (projectIndex != -1)
-            _recentProjects.RemoveAt(projectIndex);
-        _recentProjects.Insert(0, project);
+        _recentProjects.Clear();
+        _recentProjects.AddRange(updated);
         RecentProjectsChanged?.Invoke(this, _recentProjects);
     }
 }
