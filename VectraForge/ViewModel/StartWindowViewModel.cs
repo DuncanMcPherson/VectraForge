@@ -1,9 +1,10 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Controls;
 using VectraForge.Commands;
 using VectraForge.Models;
+using VectraForge.Services;
 using VectraForge.Services.Interfaces;
+using VectraForge.Windows.Dialogs;
 
 namespace VectraForge.ViewModel;
 
@@ -16,7 +17,7 @@ public class StartWindowViewModel : ViewModelBase
     /// <summary>
     /// Represents a collection of recently accessed projects displayed in the start window.
     /// This property retrieves a read-only list of <see cref="RecentProject"/> instances,
-    /// providing metadata such as the project's path, name, and the last accessed date.
+    /// providing metadata such as the project's path, name, and the last-accessed date.
     /// </summary>
     /// <remarks>
     /// The property is populated during the window's loading process by invoking the
@@ -28,8 +29,27 @@ public class StartWindowViewModel : ViewModelBase
         get;
         private set => SetField(ref field, value);
     } = [];
-    
-    public ICommand OpenRecentProjectCommand { get; }
+
+    /// <summary>
+    /// Gets the command to open a recently accessed project from the list of recent projects.
+    /// When executed, the command triggers the logic to load the selected project
+    /// and transition the application to its corresponding workspace or environment.
+    /// </summary>
+    /// <remarks>
+    /// This command is typically bound to UI elements such as buttons or menu items
+    /// in the start window, facilitating user interaction with the list of recent projects.
+    /// It expects a <see cref="RecentProject"/> instance as a parameter, which provides
+    /// the necessary details about the project to be opened.
+    /// 
+    /// The command is initialized during the construction of the <see cref="StartWindowViewModel"/>
+    /// and uses the <see cref="RelayCommand{T}"/> implementation to encapsulate the execution logic.
+    /// </remarks>
+    public ICommand OpenRecentProjectCommand { get; private set; } = null!;
+
+    public ICommand OpenProjectCommand { get; private set; } = null!;
+    public ICommand CloneProjectCommand { get; private set; } = null!;
+    public ICommand CreateProjectCommand { get; private set; } = null!;
+    public ICommand ContinueWithoutCodeCommand { get; private set; } = null!;
 
     /// <summary>
     /// Represents the service responsible for managing and providing access to recently opened projects.
@@ -47,8 +67,17 @@ public class StartWindowViewModel : ViewModelBase
     {
         _recentProjectService = recentProjectService;
         _windowManager = windowManager;
-        OpenRecentProjectCommand = new RelayCommand<RecentProject>(OpenRecentProject);
+        InitializeCommands();
         _recentProjectService.RecentProjectsChanged += OnRecentProjectsChanged;
+    }
+
+    private void InitializeCommands()
+    {
+        OpenRecentProjectCommand = new RelayCommand<RecentProject>(OpenRecentProject);
+        OpenProjectCommand = new AsyncRelayCommand(OpenProject);
+        CloneProjectCommand = new RelayCommand(() => { }, () => false);
+        CreateProjectCommand = new RelayCommand(() => { }, () => false);
+        ContinueWithoutCodeCommand = new RelayCommand(() => { }, () => false);
     }
 
     /// <summary>
@@ -59,13 +88,44 @@ public class StartWindowViewModel : ViewModelBase
     public void OnClosing()
     {
         _recentProjectService.RecentProjectsChanged -= OnRecentProjectsChanged;
+        _windowManager.UnregisterDialogOwner(this);
     }
 
     private void OpenRecentProject(RecentProject? recentProject)
     {
         if (recentProject is null) return;
         _recentProjectService.NotifyProjectOpened(recentProject);
-        _windowManager.ShowProjectWindow();
+        var context = recentProject.ToContext();
+        _windowManager.ShowProjectWindow(context);
+    }
+
+    private async Task OpenProject()
+    {
+        var result = await _windowManager.ShowDialogWindow<ProjectPickerDialog, ProjectSourceSelection>(this);
+        if (result is null || result.Kind == ProjectSourceKind.Cancelled || string.IsNullOrEmpty(result.Path))
+            return;
+
+        switch (result.Kind)
+        {
+            case ProjectSourceKind.Folder:
+            {
+                var context = new ProjectContext(result.Path, result.Kind.ToProjectKind());
+                _windowManager.ShowProjectWindow(context);
+                RegisterRecentProject(RecentProject.FromContext(context));
+                break;
+            }
+            case ProjectSourceKind.File:
+                // TODO: open a file, and process it with the project system (non-existent as of yet)
+                throw new NotSupportedException("Opening packages and modules is not supported yet");
+            case ProjectSourceKind.Cancelled:
+            default:
+                throw new NotSupportedException($"Unhandled project source kind: {result.Kind}");
+        }
+    }
+
+    private void RegisterRecentProject(RecentProject project)
+    {
+        _recentProjectService.NotifyProjectOpened(project);
     }
 
     /// <summary>
@@ -75,9 +135,10 @@ public class StartWindowViewModel : ViewModelBase
     /// A task that represents the asynchronous operation of retrieving recently accessed projects
     /// from the associated <see cref="IRecentProjectService"/>.
     /// </returns>
-    public async Task OnLoaded()
+    public async Task OnLoaded(Window window)
     {
         RecentProjects = await _recentProjectService.GetRecentProjects();
+        _windowManager.RegisterDialogOwner(this, window);
     }
 
     /// <summary>

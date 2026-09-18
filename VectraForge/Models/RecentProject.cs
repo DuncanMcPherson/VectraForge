@@ -1,4 +1,4 @@
-using System;
+using VectraForge.Services;
 
 namespace VectraForge.Models;
 
@@ -31,8 +31,31 @@ public sealed record RecentProject
     /// </remarks>
     public DateTimeOffset LastOpened { get; init; }
     
-    // TODO: Consider adding type (folder, package, module, etc.)
-    // TODO: Add a static `FromContext` method
+    public ProjectKind Kind { get; init; }
+    
+
+    public static RecentProject FromContext(ProjectContext context)
+    {
+        var path = context.RootPath;
+        var name = context.Kind switch
+        {
+            ProjectKind.Folder => new DirectoryInfo(path).Name,
+            ProjectKind.File => System.IO.Path.GetFileNameWithoutExtension(path),
+            _ => throw new NotSupportedException($"Unknown project source kind: {context.Kind}")
+        };
+        return new RecentProject
+        {
+            LastOpened = DateTimeOffset.Now,
+            Name = name,
+            Path = path,
+            Kind = context.Kind
+        };
+    }
+
+    public ProjectContext ToContext()
+    {
+        return new ProjectContext(Path, Kind);
+    }
 
     /// <summary>
     /// Determines whether the specified <see cref="RecentProject"/> object is equal to the current instance.
