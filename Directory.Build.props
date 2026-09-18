@@ -1,5 +1,8 @@
 <Project>
     <PropertyGroup>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <EnableNunitRunner>true</EnableNunitRunner>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     </PropertyGroup>
 </Project>
