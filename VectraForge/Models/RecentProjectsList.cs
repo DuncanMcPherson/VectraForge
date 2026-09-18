@@ -18,7 +18,7 @@ public class RecentProjectsList
     /// <summary>
     /// Gets or sets the list of recently accessed projects.
     /// Each project in the list is represented by an instance of <see cref="RecentProject"/>,
-    /// containing metadata such as the project's path, name, and last accessed time.
+    /// containing metadata such as the project's path, name, and last-accessed time.
     /// </summary>
     public List<RecentProject> Projects { get; set; } = [];
 

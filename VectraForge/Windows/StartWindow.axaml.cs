@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using VectraForge.ViewModel;
@@ -16,9 +17,16 @@ public partial class StartWindow : Window
     /// Manages the main UI initialization and interaction logic for bootstrapping the user experience.
     /// </summary>
     public StartWindow(StartWindowViewModel viewModel)
+        : this()
+    {
+        DataContext = viewModel;
+    }
+
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    public StartWindow()
     {
         InitializeComponent();
-        DataContext = viewModel;
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
     }
 
     /// <summary>
@@ -44,7 +52,7 @@ public partial class StartWindow : Window
     {
         if (DataContext is not StartWindowViewModel vm)
             return;
-        _ = vm.OnLoaded();
+        _ = vm.OnLoaded(this);
         base.OnLoaded(e);
     }
 }

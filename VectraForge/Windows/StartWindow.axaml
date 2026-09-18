@@ -14,7 +14,7 @@
             <ItemsControl ItemsSource="{Binding RecentProjects}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="{Binding $parent[ItemsControl].DataContext.OpenRecentProjectCommand}"
+                        <Button Command="{Binding $parent[ItemsControl].((vm:StartWindowViewModel)DataContext).OpenRecentProjectCommand}"
                                 CommandParameter="{Binding}"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"
@@ -40,10 +40,10 @@
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                 </Style>
             </StackPanel.Styles>
-            <Button>Open Project</Button>
-            <Button>Clone Project</Button>
-            <Button>New Project</Button>
-            <Button>Continue without Code</Button>
+            <Button Command="{Binding OpenProjectCommand}">Open Project</Button>
+            <Button Command="{Binding CloneProjectCommand}">Clone Project</Button>
+            <Button Command="{Binding CreateProjectCommand}">New Project</Button>
+            <Button Command="{Binding ContinueWithoutCodeCommand}">Continue without Code</Button>
         </StackPanel>
     </Grid>
 </Window>
