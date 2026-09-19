@@ -1,3 +1,10 @@
+# [0.2.0-dev.1](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.1.0...v0.2.0-dev.1) (2026-09-19)
+
+
+### Features
+
+* Add ability to open without a project context ([2b4d7ba](https://gitlab.com/vectra-lang/vectra-forge/commit/2b4d7ba0f9ec1afcd6a5da788e2a9ea2c70f2421))
+
 # [0.1.0](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.0.0...v0.1.0) (2026-09-18)
 
 
