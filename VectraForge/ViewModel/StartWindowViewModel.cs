@@ -77,7 +77,11 @@ public class StartWindowViewModel : ViewModelBase
         OpenProjectCommand = new AsyncRelayCommand(OpenProject);
         CloneProjectCommand = new RelayCommand(() => { }, () => false);
         CreateProjectCommand = new RelayCommand(() => { }, () => false);
-        ContinueWithoutCodeCommand = new RelayCommand(() => { }, () => false);
+        ContinueWithoutCodeCommand = new RelayCommand(() =>
+        {
+            // This is intentional, and the null case will be handled by the MainWindow
+            _windowManager.ShowProjectWindow(null);
+        });
     }
 
     /// <summary>
