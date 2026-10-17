@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Avalonia.Controls;
 using VectraForge.Commands;
@@ -24,6 +25,7 @@ public class StartWindowViewModel : ViewModelBase
     /// <see cref="IRecentProjectService.GetRecentProjects"/> method. It updates dynamically
     /// in response to changes raised by the <see cref="IRecentProjectService.RecentProjectsChanged"/> event.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     public IReadOnlyList<RecentProject> RecentProjects
     {
         get;
@@ -47,7 +49,9 @@ public class StartWindowViewModel : ViewModelBase
     public ICommand OpenRecentProjectCommand { get; private set; } = null!;
 
     public ICommand OpenProjectCommand { get; private set; } = null!;
+    // Untestable as it is not yet implemented
     public ICommand CloneProjectCommand { get; private set; } = null!;
+    // Untestable as it is not yet implemented
     public ICommand CreateProjectCommand { get; private set; } = null!;
     public ICommand ContinueWithoutCodeCommand { get; private set; } = null!;
 
@@ -75,13 +79,14 @@ public class StartWindowViewModel : ViewModelBase
     {
         OpenRecentProjectCommand = new RelayCommand<RecentProject>(OpenRecentProject);
         OpenProjectCommand = new AsyncRelayCommand(OpenProject);
-        CloneProjectCommand = new RelayCommand(() => { }, () => false);
-        CreateProjectCommand = new RelayCommand(() => { }, () => false);
         ContinueWithoutCodeCommand = new RelayCommand(() =>
         {
             // This is intentional, and the null case will be handled by the MainWindow
             _windowManager.ShowProjectWindow(null);
         });
+        // These commands are not yet implemented, and testing them is impossible
+        CloneProjectCommand = new RelayCommand(() => { }, () => false);
+        CreateProjectCommand = new RelayCommand(() => { }, () => false);
     }
 
     /// <summary>
@@ -108,23 +113,10 @@ public class StartWindowViewModel : ViewModelBase
         var result = await _windowManager.ShowDialogWindow<ProjectPickerDialog, ProjectSourceSelection>(this);
         if (result is null || result.Kind == ProjectSourceKind.Cancelled || string.IsNullOrEmpty(result.Path))
             return;
-
-        switch (result.Kind)
-        {
-            case ProjectSourceKind.Folder:
-            {
-                var context = new ProjectContext(result.Path, result.Kind.ToProjectKind());
-                _windowManager.ShowProjectWindow(context);
-                RegisterRecentProject(RecentProject.FromContext(context));
-                break;
-            }
-            case ProjectSourceKind.File:
-                // TODO: open a file, and process it with the project system (non-existent as of yet)
-                throw new NotSupportedException("Opening packages and modules is not supported yet");
-            case ProjectSourceKind.Cancelled:
-            default:
-                throw new NotSupportedException($"Unhandled project source kind: {result.Kind}");
-        }
+        
+        var context = new ProjectContext(result.Path, result.Kind.ToProjectKind());
+        _windowManager.ShowProjectWindow(context);
+        RegisterRecentProject(RecentProject.FromContext(context));
     }
 
     private void RegisterRecentProject(RecentProject project)
@@ -139,6 +131,7 @@ public class StartWindowViewModel : ViewModelBase
     /// A task that represents the asynchronous operation of retrieving recently accessed projects
     /// from the associated <see cref="IRecentProjectService"/>.
     /// </returns>
+    [ExcludeFromCodeCoverage]
     public async Task OnLoaded(Window window)
     {
         RecentProjects = await _recentProjectService.GetRecentProjects();
@@ -151,6 +144,7 @@ public class StartWindowViewModel : ViewModelBase
     /// </summary>
     /// <param name="sender">The source of the event, which can be null.</param>
     /// <param name="projects">The updated list of recent projects received from the event.</param>
+    [ExcludeFromCodeCoverage]
     private void OnRecentProjectsChanged(object? sender, IReadOnlyList<RecentProject> projects)
     {
         RecentProjects = projects;

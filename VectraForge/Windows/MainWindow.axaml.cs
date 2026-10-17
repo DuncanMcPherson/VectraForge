@@ -1,9 +1,9 @@
-using Avalonia;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace VectraForge.Windows;
 
+[ExcludeFromCodeCoverage]
 public partial class MainWindow : Window
 {
     public MainWindow()

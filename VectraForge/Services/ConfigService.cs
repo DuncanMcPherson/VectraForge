@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Concurrent;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using VectraForge.Services.Interfaces;
 
 namespace VectraForge.Services;
 
+// TODO: This class is not yet tested because it is mid-refactor on a different branch. write tests when the refactor is complete
 /// <inheritdoc/>
 public class ConfigService : IConfigService
 {
@@ -19,7 +16,6 @@ public class ConfigService : IConfigService
     public async Task WriteConfigFile(string fileName, string content)
     {
         Directory.CreateDirectory(ConfigFolder);
-        // TODO: Revisit if multi-instance ever becomes supported
         var gate = _locks.GetOrAdd(fileName, _ => new SemaphoreSlim(1, 1));
         await gate.WaitAsync();
 

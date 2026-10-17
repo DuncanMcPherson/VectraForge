@@ -6,10 +6,18 @@ namespace VectraForge.Converters;
 
 public class RelativeTimeConverter : IValueConverter
 {
+    private readonly TimeProvider _time;
+
+    public RelativeTimeConverter() : this(TimeProvider.System)
+    {
+    }
+    
+    public RelativeTimeConverter(TimeProvider time) => _time = time;
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not DateTimeOffset dto) return value;
-        var delta = DateTimeOffset.Now - dto;
+        var delta = _time.GetUtcNow() - dto;
 
         return delta switch
         {
@@ -17,7 +25,7 @@ public class RelativeTimeConverter : IValueConverter
             { TotalMinutes: < 60 } => $"{(int)delta.TotalMinutes} min ago",
             { TotalHours: < 24 } => $"{(int)delta.TotalHours} hr ago",
             { TotalDays: < 7 } => $"{(int)delta.TotalDays} day{((int)delta.TotalDays == 1 ? "" : "s")} ago",
-            _ => dto.LocalDateTime.ToString("MMM d, yyyy")
+            _ => dto.LocalDateTime.ToString("MMM d, yyyy", culture)
         };
     }
 

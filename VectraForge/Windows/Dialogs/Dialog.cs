@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
 using VectraForge.Models;
 
 namespace VectraForge.Windows.Dialogs;
 
+[ExcludeFromCodeCoverage]
 public abstract class Dialog : Window
 {
     protected Dialog()

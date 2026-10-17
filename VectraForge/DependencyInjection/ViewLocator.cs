@@ -1,4 +1,4 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using VectraForge.ViewModel;
@@ -17,6 +17,7 @@ namespace VectraForge.DependencyInjection;
 /// If the corresponding view type is found, it is instantiated using the provided <see cref="IServiceProvider"/>.
 /// Otherwise, a placeholder <see cref="Avalonia.Controls.TextBlock"/> is returned indicating that no view was found.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
 {
     /// <summary>

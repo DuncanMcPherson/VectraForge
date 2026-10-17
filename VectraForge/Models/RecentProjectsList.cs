@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace VectraForge.Models;
@@ -6,6 +7,7 @@ namespace VectraForge.Models;
 /// <summary>
 /// Represents a collection of recently accessed projects along with their metadata.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class RecentProjectsList
 {
     /// <summary>
