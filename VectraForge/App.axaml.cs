@@ -1,4 +1,4 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,7 @@ namespace VectraForge;
 /// It manages the initialization of the application, dependency injection configuration,
 /// and framework-level configurations necessary for running the application.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public partial class App : Application
 {
     /// Initializes the application and loads the Avalonia XAML resources.

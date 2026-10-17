@@ -25,9 +25,9 @@ public static class VectraForgeServiceProviderExtensions
         /// - UI windows such as StartWindow.
         /// - View models such as StartWindowViewModel.
         /// 
-        /// <return>
+        /// <returns>
         /// The same instance of IServiceCollection with VectraForge services added.
-        /// </return>
+        /// </returns>
         public IServiceCollection AddVectraForgeServices()
         {
             return services.AddWindows()

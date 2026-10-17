@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -11,6 +12,7 @@ using VectraForge.Windows.Dialogs;
 namespace VectraForge.Services;
 
 /// <inheritdoc/>
+[ExcludeFromCodeCoverage]
 public class WindowManager(IServiceProvider provider, IProjectContextAccessor contextAccessor) : IWindowManager
 {
     private readonly Dictionary<ViewModelBase, Window> _dialogOwners = new();

@@ -10,6 +10,7 @@ public class AsyncRelayCommand : ICommand
 
     public AsyncRelayCommand(Func<Task> execute, Func<bool>? canExecute = null)
     {
+        ArgumentNullException.ThrowIfNull(execute);
         _execute = execute;
         _canExecute = canExecute;
     }

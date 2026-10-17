@@ -28,10 +28,6 @@ public interface IWindowManager
     /// and the ProjectWindow. These dependencies should be resolved to ensure proper
     /// functionality.
     /// </remarks>
-    /// <exception cref="NotImplementedException">
-    /// Thrown if the method is called before the required ProjectContext and ProjectWindow
-    /// are implemented and integrated.
-    /// </exception>
     void ShowProjectWindow(ProjectContext? context);
 
     /// <summary>

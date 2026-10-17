@@ -10,6 +10,7 @@ namespace VectraForge.Windows;
 /// This window serves as the entry point for users, allowing interaction with recent projects
 /// and navigation to other parts of the application.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public partial class StartWindow : Window
 {
     /// <summary>
@@ -37,9 +38,9 @@ public partial class StartWindow : Window
     /// <param name="e">Provides data for the window closing event, including the ability to cancel the close.</param>
     protected override void OnClosing(WindowClosingEventArgs e)
     {
+        base.OnClosing(e);
         var viewModel = DataContext as StartWindowViewModel;
         viewModel?.OnClosing();
-        base.OnClosing(e);
     }
 
     /// <summary>
