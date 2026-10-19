@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:VectraForge.ViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:FileTreeViewModel"
+             x:Class="VectraForge.View.FileTreeView">
+    <Grid>
+        <TextBlock Text="No folder open" IsVisible="{Binding IsEmpty}"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12,0,0"/>
+        <TreeView ItemsSource="{Binding Roots}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <TreeView.Styles>
+                <Style Selector="TreeViewItem" x:DataType="vm:FileNode">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                </Style>
+            </TreeView.Styles>
+            <TreeView.DataTemplates>
+                <TreeDataTemplate DataType="vm:FileNode" ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}"/>
+                </TreeDataTemplate>
+            </TreeView.DataTemplates>
+        </TreeView>
+    </Grid>
+</UserControl>

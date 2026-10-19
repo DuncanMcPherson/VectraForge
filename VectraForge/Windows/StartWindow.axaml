@@ -6,6 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VectraForge.Windows.StartWindow"
         x:DataType="vm:StartWindowViewModel"
+        Width="800" Height="450"
         Title="VectraForge">
     <Grid RowDefinitions="50,*" ColumnDefinitions="*,Auto">
         <Label Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Center" FontSize="36">Welcome to VectraForge!</Label>

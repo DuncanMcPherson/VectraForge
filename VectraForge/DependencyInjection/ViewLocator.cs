@@ -27,17 +27,17 @@ public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
     /// <returns>
     /// A UI control associated with the ViewModel if resolved successfully; otherwise, a TextBlock indicating the View was not found.
     /// </returns>
-    public Control? Build(object? data)
+    public Control Build(object? data)
     {
         var viewModelType = data!.GetType();
         var viewTypeName = viewModelType.FullName!.Replace("ViewModel", "View");
         var viewType = Type.GetType(viewTypeName);
 
-        if (viewType != null)
-            return (Control)(serviceProvider.GetService(viewType)
-                             ?? Activator.CreateInstance(viewType)!);
-        
-        return new TextBlock { Text = "Not Found:" + viewTypeName };
+        if (viewType == null) return new TextBlock { Text = "Not Found:" + viewTypeName };
+        var control = (Control)(serviceProvider.GetService(viewType) ?? Activator.CreateInstance(viewType)!);
+        control.DataContext = data;
+        return control;
+
     }
 
     /// <summary>

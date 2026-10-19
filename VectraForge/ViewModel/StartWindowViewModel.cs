@@ -113,8 +113,10 @@ public class StartWindowViewModel : ViewModelBase
         var result = await _windowManager.ShowDialogWindow<ProjectPickerDialog, ProjectSourceSelection>(this);
         if (result is null || result.Kind == ProjectSourceKind.Cancelled || string.IsNullOrEmpty(result.Path))
             return;
-        
-        var context = new ProjectContext(result.Path, result.Kind.ToProjectKind());
+        var projectName = result.Kind == ProjectSourceKind.File
+            ? Path.GetFileNameWithoutExtension(result.Path)
+            : new DirectoryInfo(result.Path).Name;
+        var context = new ProjectContext(result.Path, projectName, result.Kind.ToProjectKind());
         _windowManager.ShowProjectWindow(context);
         RegisterRecentProject(RecentProject.FromContext(context));
     }
