@@ -1,3 +1,10 @@
+# [0.2.0-dev.2](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.1...v0.2.0-dev.2) (2026-10-19)
+
+
+### Features
+
+* Add File Tree without file open capabilities ([9882fa3](https://gitlab.com/vectra-lang/vectra-forge/commit/9882fa3c9446e3f8bf344df9462c6eff9eb2c230))
+
 # [0.2.0-dev.1](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.1.0...v0.2.0-dev.1) (2026-09-19)
 
 
