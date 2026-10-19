@@ -37,4 +37,13 @@ public interface IRecentProjectService
     /// This includes metadata such as its path, name, and the time it was last accessed.
     /// </param>
     void NotifyProjectOpened(RecentProject project);
+
+    /// <summary>
+    /// Removes a project from the recent list (the project on disk is untouched).
+    /// No-op if it isn't in the list.
+    /// </summary>
+    /// <param name="project">
+    /// The <see cref="RecentProject"/> instance to be removed from the list
+    /// </param>
+    void RemoveProject(RecentProject project);
 }

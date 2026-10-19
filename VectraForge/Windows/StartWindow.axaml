@@ -6,8 +6,23 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VectraForge.Windows.StartWindow"
         x:DataType="vm:StartWindowViewModel"
+        x:Name="StartWindowRoot"
         Width="800" Height="450"
         Title="VectraForge">
+    <Window.Styles>
+        <Style Selector="Grid.recent Button.recent-menu">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="Grid.recent:pointerover Button.recent-menu">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Grid.recent Button.recent-menu:focus-visible">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Grid.recent Button.recent-menu:flyout-open">
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+    </Window.Styles>
     <Grid RowDefinitions="50,*" ColumnDefinitions="*,Auto">
         <Label Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Center" FontSize="36">Welcome to VectraForge!</Label>
 
@@ -15,21 +30,48 @@
             <ItemsControl ItemsSource="{Binding RecentProjects}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="{Binding $parent[ItemsControl].((vm:StartWindowViewModel)DataContext).OpenRecentProjectCommand}"
+                        <Grid Classes="recent">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuItem Header="Remove from Recent Projects"
+                                              Command="{Binding #StartWindowRoot.((vm:StartWindowViewModel)DataContext).RemoveRecentProjectCommand}"
+                                              CommandParameter="{Binding}"/>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Button
+                                Command="{Binding $parent[ItemsControl].((vm:StartWindowViewModel)DataContext).OpenRecentProjectCommand}"
                                 CommandParameter="{Binding}"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Padding="12,8">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" />
-                                <TextBlock Text="{Binding Path, Converter={StaticResource ParentDirectoryConverter}}"
-                                           FontSize="12" Foreground="Gray"/>
-                                <TextBlock Text="{Binding LastOpened, Converter={StaticResource RelativeTimeConverter}}"
-                                           FontSize="11" Foreground="DimGray"/>
-                            </StackPanel>
-                        </Button>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" />
+                                    <TextBlock
+                                        Text="{Binding Path, Converter={StaticResource ParentDirectoryConverter}}"
+                                        FontSize="12" Foreground="Gray" />
+                                    <TextBlock
+                                        Text="{Binding LastOpened, Converter={StaticResource RelativeTimeConverter}}"
+                                        FontSize="11" Foreground="DimGray" />
+                                </StackPanel>
+                            </Button>
+                            <Button Classes="recent-menu"
+                                    Content="⋮"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,8,0"
+                                    Background="Transparent"
+                                    BorderThickness="0">
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                        <MenuItem Header="Remove from Recent Projects"
+                                                  Command="{Binding #StartWindowRoot.((vm:StartWindowViewModel)DataContext).RemoveRecentProjectCommand}"
+                                                  CommandParameter="{Binding}"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

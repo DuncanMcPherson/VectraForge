@@ -32,11 +32,23 @@ public class RecentProjectService(IConfigService configService) : IRecentProject
             updated.RemoveAt(index);
         updated.Insert(0, project);
 
+        Commit(updated);
+    }
+
+    /// <inheritdoc/>
+    public void RemoveProject(RecentProject project)
+    {
+        var updated = _recentProjects[..];
+        if (updated.RemoveAll(p => p.Equals(project)) == 0)
+            return;
+        Commit(updated);
+    }
+
+    private void Commit(List<RecentProject> updated)
+    {
         var recentsList = new RecentProjectsList { Projects = updated };
         configService.WriteConfigFile("recent_projects.json", recentsList.ToJson());
-        
-        _recentProjects.Clear();
-        _recentProjects.AddRange(updated);
+        _recentProjects = updated;
         RecentProjectsChanged?.Invoke(this, _recentProjects);
     }
 }

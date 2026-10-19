@@ -54,6 +54,7 @@ public class StartWindowViewModel : ViewModelBase
     // Untestable as it is not yet implemented
     public ICommand CreateProjectCommand { get; private set; } = null!;
     public ICommand ContinueWithoutCodeCommand { get; private set; } = null!;
+    public ICommand RemoveRecentProjectCommand { get; private set; } = null!;
 
     /// <summary>
     /// Represents the service responsible for managing and providing access to recently opened projects.
@@ -84,6 +85,7 @@ public class StartWindowViewModel : ViewModelBase
             // This is intentional, and the null case will be handled by the MainWindow
             _windowManager.ShowProjectWindow(null);
         });
+        RemoveRecentProjectCommand = new RelayCommand<RecentProject>(RemoveRecentProject);
         // These commands are not yet implemented, and testing them is impossible
         CloneProjectCommand = new RelayCommand(() => { }, () => false);
         CreateProjectCommand = new RelayCommand(() => { }, () => false);
@@ -106,6 +108,12 @@ public class StartWindowViewModel : ViewModelBase
         _recentProjectService.NotifyProjectOpened(recentProject);
         var context = recentProject.ToContext();
         _windowManager.ShowProjectWindow(context);
+    }
+
+    private void RemoveRecentProject(RecentProject? recentProject)
+    {
+        if (recentProject is null) return;
+        _recentProjectService.RemoveProject(recentProject);
     }
 
     private async Task OpenProject()
