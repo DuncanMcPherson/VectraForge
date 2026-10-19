@@ -45,6 +45,8 @@ public class ProjectPickerDialogViewModelTests
                 {
                     Assert.That(arg, Is.Not.Null);
                     Assert.That(arg, Is.InstanceOf<ProjectSourceSelection>());
+                    if (arg is null)
+                        return;
                     var projectSourceSelection = (ProjectSourceSelection)arg;
                     Assert.That(projectSourceSelection.Kind, Is.EqualTo(ProjectSourceKind.Cancelled));
                     Assert.That(projectSourceSelection.Path, Is.Empty);
@@ -64,6 +66,8 @@ public class ProjectPickerDialogViewModelTests
                 {
                     Assert.That(arg, Is.Not.Null);
                     Assert.That(arg, Is.InstanceOf<ProjectSourceSelection>());
+                    if (arg is null)
+                        return;
                     var projectSourceSelection = (ProjectSourceSelection)arg;
                     Assert.That(projectSourceSelection.Kind, Is.EqualTo(ProjectSourceKind.File));
                     Assert.That(projectSourceSelection.Path, Is.Not.Empty);
@@ -90,6 +94,8 @@ public class ProjectPickerDialogViewModelTests
                 {
                     Assert.That(arg, Is.Not.Null);
                     Assert.That(arg, Is.InstanceOf<ProjectSourceSelection>());
+                    if (arg is null)
+                        return;
                     var projectSourceSelection = (ProjectSourceSelection)arg;
                     Assert.That(projectSourceSelection.Kind, Is.EqualTo(ProjectSourceKind.Cancelled));
                     Assert.That(projectSourceSelection.Path, Is.Empty);
@@ -109,6 +115,8 @@ public class ProjectPickerDialogViewModelTests
                 {
                     Assert.That(arg, Is.Not.Null);
                     Assert.That(arg, Is.InstanceOf<ProjectSourceSelection>());
+                    if (arg is null)
+                        return;
                     var projectSourceSelection = (ProjectSourceSelection)arg;
                     Assert.That(projectSourceSelection.Kind, Is.EqualTo(ProjectSourceKind.Folder));
                     Assert.That(projectSourceSelection.Path, Is.Not.Empty);

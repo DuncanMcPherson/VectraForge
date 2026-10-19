@@ -2,8 +2,62 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:vm="using:VectraForge.ViewModel"
+        mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="900"
         x:Class="VectraForge.Windows.MainWindow"
-        Title="MainWindow">
-    Welcome to Avalonia!
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding WindowTitle}">
+        <Grid>
+                <Grid.ColumnDefinitions>
+                        <ColumnDefinition 
+                                Width="{Binding Left.Extent, Mode=TwoWay, Converter={StaticResource DoubleToGridLengthConverter}}"
+                                MinWidth="{Binding Left.MinExtent}"
+                                MaxWidth="{Binding Left.MaxExtent}"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" MinWidth="400"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition 
+                                Width="{Binding Right.Extent, Mode=TwoWay, Converter={StaticResource DoubleToGridLengthConverter}}"
+                                MinWidth="{Binding Right.MinExtent}"
+                                MaxWidth="{Binding Right.MaxExtent}"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition 
+                                Height="{Binding Bottom.Extent, Mode=TwoWay, Converter={StaticResource DoubleToGridLengthConverter}}"
+                                MinHeight="{Binding Bottom.MinExtent}"
+                                MaxHeight="{Binding Bottom.MaxExtent}"/>
+                </Grid.RowDefinitions>
+                <ContentControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Content="{Binding Left}"
+                                IsVisible="{Binding Left.IsExpanded}"/>
+                <GridSplitter 
+                        Grid.Row="0" 
+                        Grid.Column="1" 
+                        ResizeDirection="Columns"
+                        Grid.RowSpan="3"
+                        Classes="v"
+                        IsVisible="{Binding Left.IsExpanded}"/>
+                <!-- Editor Area -->
+                <GridSplitter 
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Grid.RowSpan="3"
+                        Classes="v"
+                        ResizeDirection="Columns"
+                        IsVisible="{Binding Right.IsExpanded}"/>
+                <ContentControl Grid.Row="0" Grid.Column="4" Grid.RowSpan="3" Content="{Binding Right}"
+                                IsVisible="{Binding Right.IsExpanded}"/>
+                <GridSplitter
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Classes="h"
+                        ResizeDirection="Rows"
+                        IsVisible="{Binding Bottom.IsExpanded}"/>
+                <ContentControl
+                        Grid.Column="2"
+                        Grid.Row="2"
+                        Content="{Binding Bottom}"
+                        IsVisible="{Binding Bottom.IsExpanded}"/>
+        </Grid>
 </Window>

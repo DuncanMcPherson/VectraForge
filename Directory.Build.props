@@ -4,5 +4,6 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <EnableNunitRunner>true</EnableNunitRunner>
         <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+        <NoWarn>$(NoWarn);NU1507</NoWarn>
     </PropertyGroup>
 </Project>

@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
+using VectraForge.Models;
 using VectraForge.Services;
 using VectraForge.Services.Interfaces;
+using VectraForge.View;
 using VectraForge.ViewModel;
 using VectraForge.Windows;
 using VectraForge.Windows.Dialogs;
@@ -32,7 +34,8 @@ public static class VectraForgeServiceProviderExtensions
         {
             return services.AddWindows()
                 .AddViewModels()
-                .AddApplicationServices();
+                .AddApplicationServices()
+                .AddToolWindows();
         }
 
         /// <summary>
@@ -60,6 +63,7 @@ public static class VectraForgeServiceProviderExtensions
         private IServiceCollection AddViewModels()
         {
             services.AddTransient<StartWindowViewModel>();
+            services.AddTransient<MainWindowViewModel>();
             return services;
         }
 
@@ -75,6 +79,15 @@ public static class VectraForgeServiceProviderExtensions
             services.AddSingleton<IRecentProjectService, RecentProjectService>();
             services.AddSingleton<IConfigService, ConfigService>();
             services.AddSingleton<IProjectContextAccessor, ProjectContextAccessor>();
+            services.AddSingleton<IProjectLayoutStore, ProjectLayoutStore>();
+            services.AddSingleton<IAtomicFileStore, AtomicFileStore>();
+            services.AddSingleton<IToolWindowRegistry, ToolWindowRegistry>();
+            return services;
+        }
+
+        private IServiceCollection AddToolWindows()
+        {
+            services.AddSingleton(new ToolWindow("core.files", "Files", WindowSlot.Left, ctx => new FileTreeViewModel(ctx)));
             return services;
         }
     }

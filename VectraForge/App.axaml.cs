@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using VectraForge.DependencyInjection;
@@ -42,6 +43,11 @@ public partial class App : Application
     /// are initialized properly before the application begins execution.
     public override void OnFrameworkInitializationCompleted()
     {
+        if (Design.IsDesignMode)
+        {
+            base.OnFrameworkInitializationCompleted();
+            return;
+        }
         var services = new ServiceCollection();
         services.AddSingleton<IServiceProvider>(sp => sp);
 

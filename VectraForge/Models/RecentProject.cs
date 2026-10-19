@@ -55,7 +55,7 @@ public sealed record RecentProject
 
     public ProjectContext ToContext()
     {
-        return new ProjectContext(Path, Kind);
+        return new ProjectContext(Path, Name, Kind);
     }
 
     /// <summary>

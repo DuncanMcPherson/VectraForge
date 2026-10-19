@@ -33,7 +33,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     /// <param name="propertyName">
     /// The name of the property that changed. The default value is the name of the caller if no argument is provided.
     /// </param>
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
