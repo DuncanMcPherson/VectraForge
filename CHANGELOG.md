@@ -1,3 +1,10 @@
+# [0.2.0-dev.3](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.2...v0.2.0-dev.3) (2026-10-19)
+
+
+### Features
+
+* Add ability to remove recent projects ([0718853](https://gitlab.com/vectra-lang/vectra-forge/commit/0718853a46871e8b7b5c4b2583c50edcda1b034d))
+
 # [0.2.0-dev.2](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.1...v0.2.0-dev.2) (2026-10-19)
 
 
