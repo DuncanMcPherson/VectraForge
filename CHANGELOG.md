@@ -1,3 +1,10 @@
+# [0.2.0-dev.6](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.5...v0.2.0-dev.6) (2026-10-20)
+
+
+### Bug Fixes
+
+* add distributions file ([82a3d26](https://gitlab.com/vectra-lang/vectra-forge/commit/82a3d2664d2fe016e3459fce2160407023e3677f))
+
 # [0.2.0-dev.5](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.4...v0.2.0-dev.5) (2026-10-20)
 
 
