@@ -1,0 +1,17 @@
+Origin: VectraForge
+Label: VectraForge
+Codename: stable
+Suite: stable
+Architectures: amd64
+Components: main
+Description: VectraForge stable releases
+SignWith: yes
+
+Origin: VectraForge
+Label: VectraForge (dev)
+Codename: dev
+Suite: dev
+Architectures: amd64
+Components: main
+Description: VectraForge pre-releases
+SignWith: yes
