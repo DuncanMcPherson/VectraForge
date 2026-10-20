@@ -77,7 +77,7 @@ publish-apt:
     RCLONE_CONFIG_R2_NO_CHECK_BUCKET: "true"
   before_script:
     - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
-    - apt-get update -qq && apt-get install -y -qq reprepro gnupg rclone
+    - apt-get update -qq && apt-get install -y -qq ca-certificates reprepro gnupg rclone
     - echo "$GPG_SIGNING_KEY" | base64 -d | gpg --batch --import
   script: 
     - |
