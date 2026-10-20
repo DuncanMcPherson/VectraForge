@@ -13,6 +13,9 @@
         <File Path=".releaserc.json" />
         <File Path="package.json" />
     </Folder>
+    <Folder Name="/vf-apt/">
+        <File Path="vf-apt/deb.gitlab-ci.yml" />
+    </Folder>
     <Project Path="VectraForge.Tests/VectraForge.Tests.csproj" />
     <Project Path="VectraForge/VectraForge.csproj" />
 </Solution>

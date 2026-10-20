@@ -9,7 +9,10 @@ stages:
   - test
   - version
   - build
+  - package
   - release
+include: 
+  - local: vf-apt/deb.gitlab-ci.yml
 
 workflow:
   rules:
@@ -171,6 +174,8 @@ build:
     paths:
       - ./publish/$RID/*.zip
     expire_in: 1 week
+
+
 
 # ── Release ───────────────────────────────────────────────────────────────────
 
