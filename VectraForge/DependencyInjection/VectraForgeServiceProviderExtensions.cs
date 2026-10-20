@@ -49,6 +49,7 @@ public static class VectraForgeServiceProviderExtensions
             services.AddTransient<StartWindow>();
             services.AddTransient<MainWindow>();
             services.AddTransient<ProjectPickerDialog>();
+            services.AddTransient<AboutDialog>();
             return services;
         }
 
@@ -64,6 +65,7 @@ public static class VectraForgeServiceProviderExtensions
         {
             services.AddTransient<StartWindowViewModel>();
             services.AddTransient<MainWindowViewModel>();
+            services.AddTransient<AboutDialogViewModel>();
             return services;
         }
 
