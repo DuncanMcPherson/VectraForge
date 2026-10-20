@@ -1,3 +1,10 @@
+# [0.2.0-dev.4](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.3...v0.2.0-dev.4) (2026-10-20)
+
+
+### Features
+
+* add about window ([341c1f9](https://gitlab.com/vectra-lang/vectra-forge/commit/341c1f95b1a41cb3b7e122be5b391ad7297c8054))
+
 # [0.2.0-dev.3](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.2...v0.2.0-dev.3) (2026-10-19)
 
 
