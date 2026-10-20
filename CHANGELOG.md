@@ -1,3 +1,10 @@
+# [0.2.0-dev.5](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.4...v0.2.0-dev.5) (2026-10-20)
+
+
+### Bug Fixes
+
+* add ca-certificates to install list for job runner ([9db4606](https://gitlab.com/vectra-lang/vectra-forge/commit/9db4606fb471843e019de201c86fcac0629940e3))
+
 # [0.2.0-dev.4](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.3...v0.2.0-dev.4) (2026-10-20)
 
 
