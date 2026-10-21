@@ -1,3 +1,10 @@
+# [0.2.0-dev.7](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.6...v0.2.0-dev.7) (2026-10-21)
+
+
+### Features
+
+* Switch to Docked tabs for all tools and editors on main window ([c7c3df8](https://gitlab.com/vectra-lang/vectra-forge/commit/c7c3df8cc2debe5ed1eb348c06ca7fd9414e7953))
+
 # [0.2.0-dev.6](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.5...v0.2.0-dev.6) (2026-10-20)
 
 
