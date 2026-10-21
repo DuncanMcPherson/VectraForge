@@ -1,3 +1,4 @@
+using Dock.Model.Core;
 using Microsoft.Extensions.DependencyInjection;
 using VectraForge.Models;
 using VectraForge.Services;
