@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Dock.Model.Core;
 using VectraForge.ViewModel;
 
 namespace VectraForge.DependencyInjection;
@@ -29,6 +30,8 @@ public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
     /// </returns>
     public Control Build(object? data)
     {
+        if (data is IDockable dockable)
+            data = dockable.Context;
         var viewModelType = data!.GetType();
         var viewTypeName = viewModelType.FullName!.Replace("ViewModel", "View");
         var viewType = Type.GetType(viewTypeName);
@@ -47,5 +50,10 @@ public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
     /// <returns>
     /// Returns <c>true</c> if the provided data object is of type <see cref="ViewModelBase"/>; otherwise, <c>false</c>.
     /// </returns>
-    public bool Match(object? data) => data is ViewModelBase;
+    public bool Match(object? data)
+    {
+        if (data is IDockable dockable)
+            return dockable.Context is ViewModelBase;
+        return data is ViewModelBase;
+    }
 }

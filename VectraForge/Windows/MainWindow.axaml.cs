@@ -12,7 +12,6 @@ public partial class MainWindow : Window
         : this()
     {
         DataContext = vm;
-        Closing += (_, _) => vm.FlushLayout();
     }
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

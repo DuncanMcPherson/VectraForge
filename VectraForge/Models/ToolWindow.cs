@@ -1,3 +1,4 @@
+using Dock.Model.Core;
 using VectraForge.Services;
 using VectraForge.ViewModel;
 
