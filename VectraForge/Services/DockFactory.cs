@@ -13,6 +13,47 @@ namespace VectraForge.Services;
 public class DockFactory(IToolWindowRegistry registry, Func<ProjectContext?> context) : Factory
 {
     private readonly Dictionary<string, ViewModelBase> _toolContexts = new();
+    private IDocumentDock? _documentDock;
+    private IRootDock? _root;
+    public Func<EditorFileViewModel, Task<bool>>? ConfirmClose { get; set; }
+    private bool _closeApproved;
+    private readonly HashSet<IDockable> _pendingClose = [];
+    
+    public IReadOnlyList<EditorFileViewModel> OpenEditors() =>
+        [.. AllDockables(_root).Select(d => d.Context).OfType<EditorFileViewModel>().Distinct()];
+
+    private static readonly StringComparer PathComparer = OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
+        ? StringComparer.OrdinalIgnoreCase
+        : StringComparer.Ordinal;
+
+    public override bool OnDockableClosing(IDockable? dockable)
+    {
+        if (_closeApproved || dockable?.Context is not EditorFileViewModel { IsDirty: true } vm)
+            return base.OnDockableClosing(dockable);
+        if (_pendingClose.Add(dockable)) _ = CloseAfterConfirmAsync(dockable, vm);
+        return false;
+    }
+
+    private async Task CloseAfterConfirmAsync(IDockable? dockable, EditorFileViewModel vm)
+    {
+        try
+        {
+            if (ConfirmClose is null || !await ConfirmClose(vm)) return;
+            _closeApproved = true;
+            try
+            {
+                CloseDockable(dockable);
+            }
+            finally
+            {
+                _closeApproved = false;
+            }
+        }
+        finally
+        {
+            _pendingClose.Remove(dockable!);
+        }
+    }
 
     public override IRootDock CreateLayout()
     {
@@ -65,7 +106,50 @@ public class DockFactory(IToolWindowRegistry registry, Func<ProjectContext?> con
         root.TopPinnedDockables = CreateList<IDockable>();
         root.BottomPinnedDockables = CreateList<IDockable>();
         root.PinnedDock = null;
+        _documentDock = documents;
+        _root = root;
         return root;
+    }
+
+    public bool TryActivateDocument(string fullPath)
+    {
+        var doc = AllDockables(_root).FirstOrDefault(d =>
+            d.Context is EditorFileViewModel e && PathComparer.Equals(e.FilePath, fullPath));
+        if (doc is null) return false;
+        Activate(doc);
+        return true;
+    }
+
+    private static IEnumerable<IDockable> AllDockables(IDockable? node)
+    {
+        if (node is null) yield break;
+        yield return node;
+        if (node is IDock { VisibleDockables: {} children})
+            foreach (var child in children)
+                foreach (var d in AllDockables(child))
+                    yield return d;
+        if (node is IRootDock { Windows: {} windows })
+            foreach (var window in windows)
+            foreach (var d in AllDockables(window.Layout))
+                yield return d;
+    }
+
+    public void AddDocument(EditorFileViewModel vm)
+    {
+        if (_documentDock is null) return;
+        var doc = new Document { Id = $"doc:{vm.FilePath}", Title = vm.DisplayTitle, Context = vm, CanClose = true };
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(EditorFileViewModel.DisplayTitle)) doc.Title = vm.DisplayTitle;
+        };
+        AddDockable(_documentDock, doc);
+        Activate(doc);
+    }
+
+    private void Activate(IDockable dock)
+    {
+        SetActiveDockable(dock);
+        SetFocusedDockable((dock.Owner as IDock) ?? _documentDock!, dock);
     }
 
     public override IDockWindow? CreateWindowFrom(IDockable dockable)

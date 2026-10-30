@@ -8,6 +8,7 @@ namespace VectraForge.Windows;
 [ExcludeFromCodeCoverage]
 public partial class MainWindow : Window
 {
+    private bool _closeConfirmed;
     public MainWindow(MainWindowViewModel vm)
         : this()
     {
@@ -19,7 +20,24 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
-    
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        if (_closeConfirmed || DataContext is not MainWindowViewModel vm) return;
+        var dirty = vm.DirtyEditors();
+        if (dirty.Count == 0) return;
+        e.Cancel = true;
+        _ = ConfirmAndCloseAsync(vm, dirty);
+    }
+
+    private async Task ConfirmAndCloseAsync(MainWindowViewModel vm, IReadOnlyList<EditorFileViewModel> dirty)
+    {
+        if (!await vm.ConfirmDiscardAsync(dirty)) return;
+        _closeConfirmed = true;
+        Close();
+    }
+
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);

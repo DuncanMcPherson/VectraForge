@@ -10,7 +10,8 @@
         <TextBlock Text="No folder open" IsVisible="{Binding IsEmpty}"
                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12,0,0"/>
         <TreeView ItemsSource="{Binding Roots}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  DoubleTapped="OnDoubleTapped">
             <TreeView.Styles>
                 <Style Selector="TreeViewItem" x:DataType="vm:FileNode">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>

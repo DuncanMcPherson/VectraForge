@@ -166,57 +166,57 @@
       },
       "Dock.Controls.DeferredContentControl": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "uxN1/pWB4R8SZVEyI9bfuAyBtDgOj5R3aaR8RydL3in0gOPvyLHtV77IloBBCRelu6qlYmxVMTWtRw103ddrlg==",
+        "resolved": "12.1.0.13",
+        "contentHash": "IcIgRzXWcDDvnY//1lH33DCz9n6loW8eUGf2NYp4zX5Yp9pMMLSMo4fKjXLLhDcokmfRjm0enIKi6oWDAZCL+Q==",
         "dependencies": {
           "Avalonia": "12.1.4"
         }
       },
       "Dock.Controls.ProportionalStackPanel": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "t6mlnBwNW7k05jl4WVQAI5m3DH0rx+0yHGMSYfNxaZ/Y6sc5xvqYaYMmR+iDLkNUHrEq5oK9JKzHOAvyV199sQ==",
+        "resolved": "12.1.0.13",
+        "contentHash": "+g6Iqf2P7yTxKwQitBwRFOQNM6b3X12BitRnW45JEegQXWbdDxIwKbPvFnxSd31rn7HXE4cwf0iv+F4LDdjhgw==",
         "dependencies": {
           "Avalonia": "12.1.4"
         }
       },
       "Dock.Controls.Recycling": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "ozG1YexDOR98McyiPxT+JRhIRFZr/DHWEtCaQ4bcdcRs3cAi+nj14mpo3aHulVbBKnhKvHbnjofmnzqmXInUiA==",
+        "resolved": "12.1.0.13",
+        "contentHash": "LYGjdMKlob0/BpI+sXgK66KISndTcbFbrXQIQoWEjHHALxeODoeHGufLCk3k82vPQN0jQQwi+mFi8NCpxYJ8FA==",
         "dependencies": {
           "Avalonia": "12.1.4",
-          "Dock.Controls.Recycling.Model": "12.1.0.12"
+          "Dock.Controls.Recycling.Model": "12.1.0.13"
         }
       },
       "Dock.Controls.Recycling.Model": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "330sm8AFxaTpsfD4lvkvw+Y3Sn2UACZaL08oT5QNxeZSAyjyDiF/GXJX5ttDnPHmEdgQwIlPvcYPbbjV3P7DBA=="
+        "resolved": "12.1.0.13",
+        "contentHash": "0rJRdqA3rH2PpFqvt6a+hb6r1Vd6P3MiPIFlmBSH9pjtQhtlkDKLD92TvocqnFcIBC/HcGRmsJI7sL5xpIuXdA=="
       },
       "Dock.MarkupExtension": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "jisLglFOhpn+ERXoVNWOPZV8+6XgnRzU1TJXzC0JoGo7mehfzHhWd6Eek+X70QTzDFkouDZXAy6dZq9QTjZXtw==",
+        "resolved": "12.1.0.13",
+        "contentHash": "UzyZ5zU99VEx54hg0tySsr275PfnnDHyd0O88gF+GHMSRPVRbJihYqH0phUyDGHeRb94WuJM6LvidvpjMEPNdg==",
         "dependencies": {
           "Avalonia": "12.1.4"
         }
       },
       "Dock.Model": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "rxtnbgw5+Wa/vfD2OWIo1gfokEr1Wc8BXbnxXMpZoZvif4ddbpnx8bVpppw5QjOjOaue6gg+d93eqjwPJOqqYw==",
+        "resolved": "12.1.0.13",
+        "contentHash": "CK+TY4GX57GDh6Vz4ucc3T4zOKJE9KYarKubULszpinaoYtH/TtcfVlKXpGUJ7Uww3w7hF4d0qX5jpjFvYCKxQ==",
         "dependencies": {
-          "Dock.Controls.Recycling.Model": "12.1.0.12"
+          "Dock.Controls.Recycling.Model": "12.1.0.13"
         }
       },
       "Dock.Settings": {
         "type": "Transitive",
-        "resolved": "12.1.0.12",
-        "contentHash": "iurC+7jh0Yeqzdg6CKA44lfftdS9+SQBooSxbSokk7otYtEtKZF47KRknzg15xeEGcD4JnrGHHjuPguN/ZK8oQ==",
+        "resolved": "12.1.0.13",
+        "contentHash": "3e2G9AFhZ/YcmrjzFTfxbGq9aJufqYUJJlDRdq6Yl2JVY7qolJP2O4pqgcueINGSGg21UGFVe3i0i1/ZcE/6vQ==",
         "dependencies": {
           "Avalonia": "12.1.4",
-          "Dock.Model": "12.1.0.12"
+          "Dock.Model": "12.1.0.13"
         }
       },
       "HarfBuzzSharp": {
@@ -270,8 +270,8 @@
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "G2GrGWNAPZBsii2F6AU8n+JT2tC1/I0Ml/e9ZyNCgPjf3hZqronP7o0X91aAynCmVeae8KkSIUNXXeXCNRmdVQ=="
+        "resolved": "10.0.14",
+        "contentHash": "QtpQzuSZVyTPCuHW058yCs9Nj0394uUkNyFHS813nOmK9UgUdBdaprJ5PPsBgsQIpxADTsTkbaMMonykem6qdw=="
       },
       "Microsoft.Extensions.DependencyModel": {
         "type": "Transitive",
@@ -398,14 +398,15 @@
         "type": "Project",
         "dependencies": {
           "Avalonia": "[12.1.4, )",
+          "Avalonia.AvaloniaEdit": "[12.0.0, )",
           "Avalonia.Desktop": "[12.1.4, )",
           "Avalonia.Fonts.Inter": "[12.1.4, )",
           "Avalonia.Themes.Fluent": "[12.1.4, )",
           "AvaloniaUI.DiagnosticsSupport": "[2.2.3, )",
-          "Dock.Avalonia": "[12.1.0.12, )",
-          "Dock.Avalonia.Themes.Fluent": "[12.1.0.12, )",
-          "Dock.Model.Mvvm": "[12.1.0.12, )",
-          "Microsoft.Extensions.DependencyInjection": "[10.0.13, )"
+          "Dock.Avalonia": "[12.1.0.13, )",
+          "Dock.Avalonia.Themes.Fluent": "[12.1.0.13, )",
+          "Dock.Model.Mvvm": "[12.1.0.13, )",
+          "Microsoft.Extensions.DependencyInjection": "[10.0.14, )"
         }
       },
       "Avalonia": {
@@ -417,6 +418,15 @@
           "Avalonia.BuildServices": "11.3.2",
           "Avalonia.Remote.Protocol": "12.1.4",
           "MicroCom.Runtime": "0.11.6"
+        }
+      },
+      "Avalonia.AvaloniaEdit": {
+        "type": "CentralTransitive",
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "VNfaYdTbiQ2DlSkSMoLg4DhTbQmQR0cFT6nqEqLkaYGLjBWmUdv5BNIuoObK4c9cgzFqnEJXBaOp4R/bxgFKfQ==",
+        "dependencies": {
+          "Avalonia": "12.0.0"
         }
       },
       "Avalonia.Desktop": {
@@ -463,46 +473,46 @@
       },
       "Dock.Avalonia": {
         "type": "CentralTransitive",
-        "requested": "[12.1.0.12, )",
-        "resolved": "12.1.0.12",
-        "contentHash": "5+S74cCWYoLFMczxCD1hM2aIc5VJnL1u/Uwf0jwJdtDgiisNkg0waBTtYr6xG9LAqFBYDzZnr2R+zJtnyAoXgQ==",
+        "requested": "[12.1.0.13, )",
+        "resolved": "12.1.0.13",
+        "contentHash": "3bqkMsexXcxe+u4pvP+LT0oQSKEu9dnL08tnmEV5Sb6UxKJZ2PBQCDtdlOwbA9YlB9ZqmvY2QqL9t4Hwp8dZcg==",
         "dependencies": {
           "Avalonia": "12.1.4",
-          "Dock.Controls.DeferredContentControl": "12.1.0.12",
-          "Dock.Controls.ProportionalStackPanel": "12.1.0.12",
-          "Dock.Controls.Recycling": "12.1.0.12",
-          "Dock.MarkupExtension": "12.1.0.12",
-          "Dock.Model": "12.1.0.12",
-          "Dock.Settings": "12.1.0.12"
+          "Dock.Controls.DeferredContentControl": "12.1.0.13",
+          "Dock.Controls.ProportionalStackPanel": "12.1.0.13",
+          "Dock.Controls.Recycling": "12.1.0.13",
+          "Dock.MarkupExtension": "12.1.0.13",
+          "Dock.Model": "12.1.0.13",
+          "Dock.Settings": "12.1.0.13"
         }
       },
       "Dock.Avalonia.Themes.Fluent": {
         "type": "CentralTransitive",
-        "requested": "[12.1.0.12, )",
-        "resolved": "12.1.0.12",
-        "contentHash": "12LHI9L9yU/qS+gMMHLF/diQJriu9hjdWbdQDXoXFac7P/7ziecLPVAecJIPRIEy75TH7SOROrnqNGBuZm0sYg==",
+        "requested": "[12.1.0.13, )",
+        "resolved": "12.1.0.13",
+        "contentHash": "MTdVpKdzGN7PXShWnD0qaRyl+qOrXAbe3X5OKEOTcq/Pty9lHRtQlhjKScpLjIwZM19GFL2CuI/dJ6ySX0wEaQ==",
         "dependencies": {
           "Avalonia": "12.1.4",
-          "Dock.Avalonia": "12.1.0.12"
+          "Dock.Avalonia": "12.1.0.13"
         }
       },
       "Dock.Model.Mvvm": {
         "type": "CentralTransitive",
-        "requested": "[12.1.0.12, )",
-        "resolved": "12.1.0.12",
-        "contentHash": "WU0TsFGSQe6lLIBLEE7XjfR44yp8FxgaUXBNPIIOq9I+9Knq0d3KOx0M//8a+ukSnXA8vmPIKToUFzSzD9hTWA==",
+        "requested": "[12.1.0.13, )",
+        "resolved": "12.1.0.13",
+        "contentHash": "yL3o43uAhOMNyGczG72BE6fV8reWbmS8RsuppCcFIo3c6UduioC/ApsKdOnBpETsL1z92gv0Y9YosV0ZHqe4rg==",
         "dependencies": {
           "CommunityToolkit.Mvvm": "8.4.0",
-          "Dock.Model": "12.1.0.12"
+          "Dock.Model": "12.1.0.13"
         }
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "4tnWU9vrU/A8NwYe9Z6wvieZ0EBb/uM82LAT+edNhdepOBWREZ7M7mzb941EIDPJaeOFdbVrDd5+7s9e89U6bQ==",
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "2LzcuVjemeXR+WdY9wGIr8iGb7fYsDAit+IScxXX2XJnX0b++mWcE/WO6fEGIqhdMfSQM2ZS5JGMHYZix7YXZg==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.13"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.14"
         }
       }
     }
