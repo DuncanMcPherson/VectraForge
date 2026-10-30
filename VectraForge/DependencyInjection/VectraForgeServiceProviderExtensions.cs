@@ -1,9 +1,7 @@
-using Dock.Model.Core;
 using Microsoft.Extensions.DependencyInjection;
 using VectraForge.Models;
 using VectraForge.Services;
 using VectraForge.Services.Interfaces;
-using VectraForge.View;
 using VectraForge.ViewModel;
 using VectraForge.Windows;
 using VectraForge.Windows.Dialogs;
@@ -51,6 +49,7 @@ public static class VectraForgeServiceProviderExtensions
             services.AddTransient<MainWindow>();
             services.AddTransient<ProjectPickerDialog>();
             services.AddTransient<AboutDialog>();
+            services.AddTransient<UnsavedChangesDialog>();
             return services;
         }
 
@@ -85,12 +84,18 @@ public static class VectraForgeServiceProviderExtensions
             services.AddSingleton<IProjectLayoutStore, ProjectLayoutStore>();
             services.AddSingleton<IAtomicFileStore, AtomicFileStore>();
             services.AddSingleton<IToolWindowRegistry, ToolWindowRegistry>();
+            services.AddSingleton<IEditorService, EditorService>();
             return services;
         }
 
         private IServiceCollection AddToolWindows()
         {
-            services.AddSingleton(new ToolWindow("core.files", "Files", WindowSlot.Left, ctx => new FileTreeViewModel(ctx)));
+            services.AddSingleton(sp =>
+            {
+                var editor = sp.GetRequiredService<IEditorService>();
+                return new ToolWindow("core.files", "Files", WindowSlot.Left,
+                    ctx => new FileTreeViewModel(ctx, editor));
+            });
             return services;
         }
     }

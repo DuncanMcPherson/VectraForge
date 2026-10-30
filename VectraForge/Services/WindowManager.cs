@@ -35,6 +35,8 @@ public class WindowManager(IServiceProvider provider, IProjectContextAccessor co
     /// <inheritdoc/>
     public Task<TResult?> ShowDialogWindow<TWindow, TResult>(ViewModelBase owningContext) where TWindow : Dialog
     {
+        return Dispatcher.UIThread.CheckAccess() ? OpenDialog() : Dispatcher.UIThread.Invoke(OpenDialog);
+
         Task<TResult?> OpenDialog()
         {
             var owner = _dialogOwners.FirstOrDefault(kvp => kvp.Key == owningContext).Value;
@@ -43,7 +45,23 @@ public class WindowManager(IServiceProvider provider, IProjectContextAccessor co
             var dialog = provider.GetRequiredService<TWindow>();
             return dialog.ShowDialog<TResult?>(owner);
         }
+    }
+
+    /// <inheritdoc/>
+    public Task<TResult?> ShowDialogWindow<TWindow, TResult>(ViewModelBase owningContext, ViewModelBase dialogContext)
+        where TWindow : Dialog
+    {
         return Dispatcher.UIThread.CheckAccess() ? OpenDialog() : Dispatcher.UIThread.Invoke(OpenDialog);
+
+        Task<TResult?> OpenDialog()
+        {
+            var owner = _dialogOwners.FirstOrDefault(kvp => kvp.Key == owningContext).Value;
+            if (owner is null)
+                throw new InvalidOperationException("No owner window registered for the dialog.");
+            var dialog = provider.GetRequiredService<TWindow>();
+            dialog.DataContext = dialogContext;
+            return dialog.ShowDialog<TResult?>(owner);
+        }
     }
 
     /// <inheritdoc/>
