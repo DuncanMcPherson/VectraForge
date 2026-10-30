@@ -1,3 +1,10 @@
+# [0.2.0-dev.8](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.7...v0.2.0-dev.8) (2026-10-30)
+
+
+### Features
+
+* Add editor ([05f1794](https://gitlab.com/vectra-lang/vectra-forge/commit/05f1794deb17c57568de00f0bf3a82c2781a8fe7))
+
 # [0.2.0-dev.7](https://gitlab.com/vectra-lang/vectra-forge/compare/v0.2.0-dev.6...v0.2.0-dev.7) (2026-10-21)
 
 
