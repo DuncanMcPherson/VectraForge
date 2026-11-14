@@ -27,5 +27,5 @@ public interface IConfigService
     /// </summary>
     /// <param name="fileName">The name of the configuration file to be read.</param>
     /// <returns>The content of the specified configuration file as a string.</returns>
-    Task<string> ReadConfigFile(string fileName);
+    Task<string?> ReadConfigFile(string fileName);
 }

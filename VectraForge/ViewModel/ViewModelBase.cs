@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Avalonia.Threading;
 
@@ -13,6 +14,7 @@ namespace VectraForge.ViewModel;
 /// This class implements the <see cref="INotifyPropertyChanged"/> interface to facilitate property change notification.
 /// It also includes utility methods for property management that reduce boilerplate code in derived classes.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 public abstract class ViewModelBase : INotifyPropertyChanged
 {
     /// <summary>
@@ -31,7 +33,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     /// <param name="propertyName">
     /// The name of the property that changed. The default value is the name of the caller if no argument is provided.
     /// </param>
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {

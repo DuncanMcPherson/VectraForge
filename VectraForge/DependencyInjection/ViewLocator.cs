@@ -1,6 +1,7 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Dock.Model.Core;
 using VectraForge.ViewModel;
 
 namespace VectraForge.DependencyInjection;
@@ -17,6 +18,7 @@ namespace VectraForge.DependencyInjection;
 /// If the corresponding view type is found, it is instantiated using the provided <see cref="IServiceProvider"/>.
 /// Otherwise, a placeholder <see cref="Avalonia.Controls.TextBlock"/> is returned indicating that no view was found.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
 {
     /// <summary>
@@ -26,17 +28,19 @@ public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
     /// <returns>
     /// A UI control associated with the ViewModel if resolved successfully; otherwise, a TextBlock indicating the View was not found.
     /// </returns>
-    public Control? Build(object? data)
+    public Control Build(object? data)
     {
+        if (data is IDockable dockable)
+            data = dockable.Context;
         var viewModelType = data!.GetType();
         var viewTypeName = viewModelType.FullName!.Replace("ViewModel", "View");
         var viewType = Type.GetType(viewTypeName);
 
-        if (viewType != null)
-            return (Control)(serviceProvider.GetService(viewType)
-                             ?? Activator.CreateInstance(viewType)!);
-        
-        return new TextBlock { Text = "Not Found:" + viewTypeName };
+        if (viewType == null) return new TextBlock { Text = "Not Found:" + viewTypeName };
+        var control = (Control)(serviceProvider.GetService(viewType) ?? Activator.CreateInstance(viewType)!);
+        control.DataContext = data;
+        return control;
+
     }
 
     /// <summary>
@@ -46,5 +50,10 @@ public class ViewLocator(IServiceProvider serviceProvider) : IDataTemplate
     /// <returns>
     /// Returns <c>true</c> if the provided data object is of type <see cref="ViewModelBase"/>; otherwise, <c>false</c>.
     /// </returns>
-    public bool Match(object? data) => data is ViewModelBase;
+    public bool Match(object? data)
+    {
+        if (data is IDockable dockable)
+            return dockable.Context is ViewModelBase;
+        return data is ViewModelBase;
+    }
 }

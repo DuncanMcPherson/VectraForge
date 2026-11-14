@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using VectraForge.Services;
 
 namespace VectraForge.Models;
@@ -54,7 +55,7 @@ public sealed record RecentProject
 
     public ProjectContext ToContext()
     {
-        return new ProjectContext(Path, Kind);
+        return new ProjectContext(Path, Name, Kind);
     }
 
     /// <summary>
@@ -64,6 +65,7 @@ public sealed record RecentProject
     /// <returns>
     /// <c>true</c> if the specified <see cref="RecentProject"/> is equal to the current instance; otherwise, <c>false</c>.
     /// </returns>
+    [ExcludeFromCodeCoverage]
     public bool Equals(RecentProject? other) =>
         other is not null && string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase);
 
@@ -74,5 +76,6 @@ public sealed record RecentProject
     /// A 32-bit signed integer hash code derived from the <see cref="Path"/> property,
     /// using a case-insensitive string comparison.
     /// </returns>
+    [ExcludeFromCodeCoverage]
     public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Path);
 }

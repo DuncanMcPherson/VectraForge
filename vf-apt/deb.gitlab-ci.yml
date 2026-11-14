@@ -1,0 +1,105 @@
+.release-rules:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+      
+build-deb:
+  stage: package
+  extends: .release-rules
+  image: debian:bookworm-slim
+  needs:
+    - job: version
+      artifacts: true
+    - job: build
+      parallel:
+        matrix:
+          - RID: linux-x64
+      artifacts: true
+  variables:
+    PKG_NAME: vectra-forge
+    BINARY: VectraForge
+    MAINTAINER: "VectraForge <noreply@vectralang.app>"
+  before_script:
+    - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip
+  script:
+    - |
+      DEB_VERSION=$(echo "$VERSION" | sed 's/-dev\./~dev./')
+      ROOT=pkgroot
+      mkdir -p $ROOT/DEBIAN $ROOT/usr/lib/$PKG_NAME $ROOT/usr/bin $ROOT/usr/share/applications
+      unzip -q ./publish/linux-x64/*.zip -d $ROOT/usr/lib/$PKG_NAME
+      chmod 755 $ROOT/usr/lib/$PKG_NAME/$BINARY
+      ln -s /usr/lib/$PKG_NAME/$BINARY $ROOT/usr/bin/$PKG_NAME
+      cat > $ROOT/usr/share/applications/$PKG_NAME.desktop <<EOF
+      [Desktop Entry]
+      Type=Application
+      Name=VectraForge
+      Exec=/usr/bin/$PKG_NAME
+      Terminal=false
+      Categories=Development;
+      EOF
+      SIZE=$(du -sk $ROOT/usr | cut -f1)
+      cat > $ROOT/DEBIAN/control <<EOF
+      Package: $PKG_NAME
+      Version: $DEB_VERSION
+      Section: devel
+      priority: optional
+      Architecture: amd64
+      Maintainer: $MAINTAINER
+      depends: libc6, libgcc-s1, libstdc++6, zlib1g, libx11-6, libice6, libsm6, libfontconfig1
+      Installed-Size: $SIZE
+      Description: VectraForge desktop application
+      EOF
+      dpkg-deb --root-owner-group --build $ROOT ${PKG_NAME}_${DEB_VERSION}_amd64.deb
+  artifacts:
+    paths:
+      - "*.deb"
+    expire_in: 1 week
+
+publish-apt:
+  stage: release
+  extends: .release-rules
+  image: debian:bookworm-slim
+  resource_group: apt-repo
+  needs:
+    - job: version
+      artifacts: true
+    - job: build-deb
+      artifacts: true
+  variables:
+    PKG_NAME: vectra-forge
+    KEEP_DEV: "5"                     # pre-releases to retain
+    RCLONE_CONFIG_R2_TYPE: s3
+    RCLONE_CONFIG_R2_PROVIDER: Cloudflare
+    RCLONE_CONFIG_R2_ACCESS_KEY_ID: $R2_ACCESS_KEY_ID
+    RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: $R2_SECRET_ACCESS_KEY
+    RCLONE_CONFIG_R2_ENDPOINT: $R2_ENDPOINT
+    RCLONE_CONFIG_R2_NO_CHECK_BUCKET: "true"
+  before_script:
+    - if [ "$NEW_RELEASE" != "true" ]; then echo "No new release; skipping."; exit 0; fi
+    - apt-get update -qq && apt-get install -y -qq ca-certificates reprepro gnupg rclone
+    - echo "$GPG_SIGNING_KEY" | base64 -d | gpg --batch --import
+  script: 
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "master" ]; then DIST=stable; else DIST=dev; fi
+      DEB=$(ls ./*.deb | head -n1)
+      APT=vf-apt/apt
+      mkdir -p $APT/db
+      rclone copy "r2:$R2_BUCKET/_db" $APT/db || [ $? -eq 3 ]
+      reprepro -b $APT includedeb "$DIST" "$DEB"
+      
+      if [ "$DIST" = dev ]; then
+        reprepro -b $APT --list-format '${version} ${filekey}\n' list dev "$PKG_NAME" \
+          | sort -V -r | tail -n +$((KEEP_DEV + 1)) > /tmp/old.txt
+        while read -r ver key; do 
+          reprepro -b $APT removefilter dev "Package (== $PKG_NAME), Version (== $ver)"
+          rclone deletefile "r2:$R2_BUCKET/$key" || true
+        done < /tmp/old.txt
+      fi 
+      reprepro -b $APT export
+      gpg --export > $APT/vectraforge.gpg
+      
+      rclone copy $APT/pool "r2:$R2_BUCKET/pool"
+      rclone sync $APT/dists "r2:$R2_BUCKET/dists"
+      rclone sync $APT/db "r2:$R2_BUCKET/_db"
+      rclone copyto $APT/vectraforge.gpg "r2:$R2_BUCKET/vectraforge.gpg"

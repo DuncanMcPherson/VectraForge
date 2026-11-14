@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Platform.Storage;
 using VectraForge.Services.Interfaces;
 
 namespace VectraForge.Services;
 
+[ExcludeFromCodeCoverage(Justification = "This is very platform-dependent, and will be retired when the VF picker is developed")]
 public class AvaloniaStoragePicker : IProjectSourcePicker
 {
     private readonly IStorageProvider _storageProvider;

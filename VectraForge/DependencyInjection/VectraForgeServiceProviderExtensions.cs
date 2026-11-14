@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using VectraForge.Models;
 using VectraForge.Services;
 using VectraForge.Services.Interfaces;
 using VectraForge.ViewModel;
@@ -25,14 +26,15 @@ public static class VectraForgeServiceProviderExtensions
         /// - UI windows such as StartWindow.
         /// - View models such as StartWindowViewModel.
         /// 
-        /// <return>
+        /// <returns>
         /// The same instance of IServiceCollection with VectraForge services added.
-        /// </return>
+        /// </returns>
         public IServiceCollection AddVectraForgeServices()
         {
             return services.AddWindows()
                 .AddViewModels()
-                .AddApplicationServices();
+                .AddApplicationServices()
+                .AddToolWindows();
         }
 
         /// <summary>
@@ -46,6 +48,8 @@ public static class VectraForgeServiceProviderExtensions
             services.AddTransient<StartWindow>();
             services.AddTransient<MainWindow>();
             services.AddTransient<ProjectPickerDialog>();
+            services.AddTransient<AboutDialog>();
+            services.AddTransient<UnsavedChangesDialog>();
             return services;
         }
 
@@ -60,6 +64,8 @@ public static class VectraForgeServiceProviderExtensions
         private IServiceCollection AddViewModels()
         {
             services.AddTransient<StartWindowViewModel>();
+            services.AddTransient<MainWindowViewModel>();
+            services.AddTransient<AboutDialogViewModel>();
             return services;
         }
 
@@ -75,6 +81,21 @@ public static class VectraForgeServiceProviderExtensions
             services.AddSingleton<IRecentProjectService, RecentProjectService>();
             services.AddSingleton<IConfigService, ConfigService>();
             services.AddSingleton<IProjectContextAccessor, ProjectContextAccessor>();
+            services.AddSingleton<IProjectLayoutStore, ProjectLayoutStore>();
+            services.AddSingleton<IAtomicFileStore, AtomicFileStore>();
+            services.AddSingleton<IToolWindowRegistry, ToolWindowRegistry>();
+            services.AddSingleton<IEditorService, EditorService>();
+            return services;
+        }
+
+        private IServiceCollection AddToolWindows()
+        {
+            services.AddSingleton(sp =>
+            {
+                var editor = sp.GetRequiredService<IEditorService>();
+                return new ToolWindow("core.files", "Files", WindowSlot.Left,
+                    ctx => new FileTreeViewModel(ctx, editor));
+            });
             return services;
         }
     }

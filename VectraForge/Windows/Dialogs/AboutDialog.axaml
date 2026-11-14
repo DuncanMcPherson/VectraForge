@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:VectraForge.ViewModel"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+        Width="400" Height="250" CanResize="False"
+        x:Class="VectraForge.Windows.Dialogs.AboutDialog"
+        x:DataType="vm:AboutDialogViewModel"
+        Title="About VectraForge">
+    <StackPanel Margin="24" Spacing="8" VerticalAlignment="Center">
+        <TextBlock Text="VectraForge" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Version, StringFormat='Version {0}'}" Foreground="Gray" HorizontalAlignment="Center" />
+        <TextBlock Text="IDE for the VectraLang ecosystem" HorizontalAlignment="Center" />
+        <TextBlock Text="Released under the MIT License" FontSize="12" Foreground="Gray" HorizontalAlignment="Center" />
+        <Button Content="Close" Command="{Binding CloseCommand}" IsDefault="True"
+                HorizontalAlignment="Center" Margin="0,12,0,0" />
+    </StackPanel>
+</Window>

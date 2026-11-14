@@ -28,10 +28,6 @@ public interface IWindowManager
     /// and the ProjectWindow. These dependencies should be resolved to ensure proper
     /// functionality.
     /// </remarks>
-    /// <exception cref="NotImplementedException">
-    /// Thrown if the method is called before the required ProjectContext and ProjectWindow
-    /// are implemented and integrated.
-    /// </exception>
     void ShowProjectWindow(ProjectContext? context);
 
     /// <summary>
@@ -49,6 +45,23 @@ public interface IWindowManager
     /// or <c>null</c> if no result is provided.
     /// </returns>
     Task<TResult?> ShowDialogWindow<TWindow, TResult>(ViewModelBase owningContext) where TWindow : Dialog;
+
+    /// <summary>
+    /// Displays a dialog window of the specified type and returns a result asynchronously.
+    /// </summary>
+    /// <typeparam name="TWindow">
+    /// The type of the dialog window to display, which must inherit from <see cref="Dialog"/>.
+    /// </typeparam>
+    /// <typeparam name="TResult">
+    /// The type of the result expected from the dialog window.
+    /// </typeparam>
+    /// <returns>
+    /// A task that represents the asynchronous operation of displaying the dialog window.
+    /// The task's result contains the value of type <typeparamref name="TResult"/> returned by the dialog window,
+    /// or <c>null</c> if no result is provided.
+    /// </returns>
+    Task<TResult?> ShowDialogWindow<TWindow, TResult>(ViewModelBase owningContext, ViewModelBase dialogContext)
+        where TWindow : Dialog;
 
     /// <summary>
     /// Registers a window to it's associated view model to handle dialog creation
